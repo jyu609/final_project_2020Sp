@@ -1,10 +1,18 @@
 import pandas as pd
 import numpy as np
 
-confirmed_dict = {}
-death_dict = {}
 
-def read_confirmed():
+def read_confirmed() -> dict:
+    """
+    Read the 'data/time_series_covid19_confirmed_global.csv' and extract data
+    :return: the number of confirmed cases of the seleted countries
+    """
+    confirmed_dict = {'US': 0, 'Spain': 0, 'Italy': 0, 'United Kingdom': 0, \
+                 'France': 0, 'Germany': 0, 'Turkey': 0, 'Russia': 0, 'Iran': 0,\
+                  'Brazil': 0, 'China': 0, 'Canada': 0, 'Fiji': 0, 'Belize': 0, \
+                  'Namibia': 0, 'Dominica': 0, 'Tajikistan': 0, 'Nicaragua': 0, \
+                  'Seychelles': 0, 'Burundi': 0, 'Suriname': 0, 'Mauritania': 0, \
+                  'Bhutan': 0, 'Comoros': 0}
     with open("data/time_series_covid19_confirmed_global.csv") as f:
         title = f.readline()
         line = f.readline()
@@ -14,12 +22,21 @@ def read_confirmed():
             cur_num = int(entities[len(entities) - 1])
             if country in confirmed_dict.keys():
                 confirmed_dict[country] += cur_num
-            else:
-                confirmed_dict[country] = cur_num
             line = f.readline()
-        print(confirmed_dict)
+    return confirmed_dict
 
-def read_death():
+
+def read_death() -> dict:
+    """
+    Read the 'data/time_series_covid19_deaths_global.csv' and extract data
+    :return: the number of death cases of the seleted countries
+    """
+    death_dict = {'US': 0, 'Spain': 0, 'Italy': 0, 'United Kingdom': 0, \
+                 'France': 0, 'Germany': 0, 'Turkey': 0, 'Russia': 0, 'Iran': 0,\
+                  'Brazil': 0, 'China': 0, 'Canada': 0, 'Fiji': 0, 'Belize': 0, \
+                  'Namibia': 0, 'Dominica': 0, 'Tajikistan': 0, 'Nicaragua': 0, \
+                  'Seychelles': 0, 'Burundi': 0, 'Suriname': 0, 'Mauritania': 0, \
+                  'Bhutan': 0, 'Comoros': 0}
     with open("data/time_series_covid19_deaths_global.csv") as f:
         title = f.readline()
         line = f.readline()
@@ -29,10 +46,9 @@ def read_death():
             cur_num = int(entities[len(entities) - 1])
             if country in death_dict.keys():
                 death_dict[country] += cur_num
-            else:
-                death_dict[country] = cur_num
             line = f.readline()
-        print(death_dict)
+    return death_dict
+
 
 def correlation_analysis():
     print("start analysis")
@@ -74,5 +90,7 @@ def calculate_correlation_coefficient(column1: pd.Series, column2: pd.Series) ->
 
 if __name__ == '__main__':
     correlation_analysis()
-    read_confirmed()
-    read_death()
+    confirmed_dict = read_confirmed()
+    death_dict = read_death()
+
+    print(death_dict)
