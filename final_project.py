@@ -104,16 +104,23 @@ def correlation_analysis():
     """
 
     covid_data = read_covid_data()
-
-    print(covid_data)
+    # print(covid_data)
 
     life_expectancy_data = read_life_expectancy()
-
-    print(life_expectancy_data)
+    # print(life_expectancy_data)
 
     covid_life_joined = pd.merge(covid_data, life_expectancy_data, on="Country")
+    # print(covid_life_joined)
 
-    print(covid_life_joined)
+    print("Correlation between 'confirmed' and 'life expectancy at birth':")
+    print("Covariance: " + str(calculate_covariance(covid_life_joined["confirmed"], covid_life_joined["Life expectancy"])))
+    print("Correlation coefficient: " + str(calculate_correlation_coefficient(covid_life_joined["confirmed"],
+                                                                            covid_life_joined["Life expectancy"])))
+    print()
+    print("Correlation between 'death' and 'life expectancy at birth':")
+    print("Covariance: " + str(calculate_covariance(covid_life_joined["death"], covid_life_joined["Life expectancy"])))
+    print("Correlation coefficient: " + str(calculate_correlation_coefficient(covid_life_joined["death"],
+                                                                              covid_life_joined["Life expectancy"])))
 
 
 def calculate_covariance(column1: pd.Series, column2: pd.Series) -> np.float64:
