@@ -53,7 +53,7 @@ def read_death() -> dict:
     return death_dict
 
 
-def read_data() -> pd.DataFrame:
+def read_covid_data() -> pd.DataFrame:
     """
     read the COVID-19 confirmed and death dataset, and return the combined dataset
     :return DataFrame of COVID-19 confirmed and death data
@@ -65,10 +65,23 @@ def read_data() -> pd.DataFrame:
 
     confirmed = pd.Series(confirmed_dict)
     death = pd.Series(death_dict)
-    covid_data = pd.DataFrame(list(zip(confirmed, death)), columns=["confirmed", "death"], index=confirmed_dict.keys())
+    covid_data = pd.DataFrame(list(zip(confirmed, death)), columns=["confirmed", "death"])
+    covid_data.insert(0, "Country", confirmed_dict.keys())
 
     return covid_data
 
+
+def read_life_expectancy() -> pd.DataFrame:
+    """
+    read the life expectancy at birth dataset
+    :return DataFrame of life expectancy at birth data
+
+    """
+
+    life_df = pd.read_csv("data/API_SP.DYN.LE00.IN_DS2_en_csv_v2_988752.csv",
+                          header=2, usecols=[0,62], names=["Country", "Life expectancy"])
+
+    return life_df
 
 def correlation_analysis():
     """
@@ -76,9 +89,17 @@ def correlation_analysis():
 
     """
 
-    covid_data = read_data()
+    covid_data = read_covid_data()
 
     print(covid_data)
+
+    life_expectancy_data = read_life_expectancy()
+
+    print(life_expectancy_data)
+
+    covid_life_joined = pd.merge(covid_data, life_expectancy_data, on="Country")
+
+    print(covid_life_joined)
 
 
 def calculate_covariance(column1: pd.Series, column2: pd.Series) -> np.float64:
