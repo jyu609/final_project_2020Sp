@@ -1,6 +1,38 @@
 import pandas as pd
 import numpy as np
 
+confirmed_dict = {}
+death_dict = {}
+
+def read_confirmed():
+    with open("data/time_series_covid19_confirmed_global.csv") as f:
+        title = f.readline()
+        line = f.readline()
+        while(line):
+            entities = line.split(',')
+            country = entities[1]
+            cur_num = int(entities[len(entities) - 1])
+            if country in confirmed_dict.keys():
+                confirmed_dict[country] += cur_num
+            else:
+                confirmed_dict[country] = cur_num
+            line = f.readline()
+        print(confirmed_dict)
+
+def read_death():
+    with open("data/time_series_covid19_deaths_global.csv") as f:
+        title = f.readline()
+        line = f.readline()
+        while(line):
+            entities = line.split(',')
+            country = entities[1]
+            cur_num = int(entities[len(entities) - 1])
+            if country in death_dict.keys():
+                death_dict[country] += cur_num
+            else:
+                death_dict[country] = cur_num
+            line = f.readline()
+        print(death_dict)
 
 def correlation_analysis():
     print("start analysis")
@@ -42,3 +74,5 @@ def calculate_correlation_coefficient(column1: pd.Series, column2: pd.Series) ->
 
 if __name__ == '__main__':
     correlation_analysis()
+    read_confirmed()
+    read_death()
