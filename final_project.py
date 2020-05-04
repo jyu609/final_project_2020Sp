@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.stats as stats
 
 
 def read_confirmed() -> dict:
@@ -113,14 +114,18 @@ def correlation_analysis():
     # print(covid_life_joined)
 
     print("Correlation between 'confirmed' and 'life expectancy at birth':")
+    # covariance is positive, so they have positive relation
     print("Covariance: " + str(calculate_covariance(covid_life_joined["confirmed"], covid_life_joined["Life expectancy"])))
-    print("Correlation coefficient: " + str(calculate_correlation_coefficient(covid_life_joined["confirmed"],
-                                                                            covid_life_joined["Life expectancy"])))
+    # correlation coefficient is between 0.4 and 0.8, they have moderately linear correlation
+    print("Correlation coefficient: " + str(calculate_correlation_coefficient(covid_life_joined["confirmed"],covid_life_joined["Life expectancy"])))
+    # p-value is less than 0.05, indicating a significant correlation
+    print("Significance of coefficient: " + str(calculate_significance_of_coefficient(covid_life_joined["confirmed"],covid_life_joined["Life expectancy"])))
+
     print()
     print("Correlation between 'death' and 'life expectancy at birth':")
     print("Covariance: " + str(calculate_covariance(covid_life_joined["death"], covid_life_joined["Life expectancy"])))
-    print("Correlation coefficient: " + str(calculate_correlation_coefficient(covid_life_joined["death"],
-                                                                              covid_life_joined["Life expectancy"])))
+    print("Correlation coefficient: " + str(calculate_correlation_coefficient(covid_life_joined["death"], covid_life_joined["Life expectancy"])))
+    print("Significance of coefficient: " + str(calculate_significance_of_coefficient(covid_life_joined["death"], covid_life_joined["Life expectancy"])))
 
     draw_scatter_plot(covid_life_joined["confirmed"].head(12), covid_life_joined["Life expectancy"].head(12), "confirmed", "Life expectancy")
     draw_scatter_plot(covid_life_joined["death"].head(12), covid_life_joined["Life expectancy"].head(12), "death", "Life expectancy")
@@ -158,6 +163,12 @@ def calculate_correlation_coefficient(column1: pd.Series, column2: pd.Series) ->
 
     corr = column1.corr(column2)
     return corr
+
+
+def calculate_significance_of_coefficient(column1: pd.Series, column2: pd.Series) -> np.float64:
+    p_value = stats.pearsonr(column1,column2)[1]
+    return p_value
+
 
 def draw_scatter_plot(x: pd.Series, y: pd.Series, x_label: str, y_label: str):
     plt.xlabel(x_label)
