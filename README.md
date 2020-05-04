@@ -21,6 +21,12 @@ Our goal is to find out the relationship between the extent of COVID-19 and the 
 3.The life expectancy at birth has positive linear relationship with COVID-19 confirmed rate and death rate
 
 4.The Internet user percentage of a country has positive linear relationship with COVID-19 confirmed rate and death rate
+# Analysis:
+
+
+# Conclusion:
+
+
 
 # Data Source:
 
