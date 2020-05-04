@@ -123,7 +123,7 @@ def read_GDP() -> pd.DataFrame:
 def read_Education() -> pd.DataFrame:
     """
     read the Expected years of schooling (years).csv dataset and modify some country names to the same as COVID-19 data
-    :return DataFrame of GDP at birth data
+    :return DataFrame of expected years of schooling
 
     """
 
@@ -144,7 +144,7 @@ def read_Education() -> pd.DataFrame:
 def read_Internet() -> pd.DataFrame:
     """
     read the Internet users, total (% of population) dataset and modify some country names to the same as COVID-19 data
-    :return DataFrame of GDP at birth data
+    :return DataFrame of the internet users percentage
 
     """
 
@@ -168,22 +168,17 @@ def correlation_analysis():
     """
 
     raw_covid_data = read_covid_data()
-    # print(covid_data)
 
     pop_data = read_population()
-    # print(pop_data)
 
     life_expectancy_data = read_life_expectancy()
-    # print(life_expectancy_data)
 
     gdp_data = read_GDP()
-    # print(gdp_data)
 
     edu_data = read_Education()
-    # print(gdp_data)
 
     int_data = read_Internet()
-    # print(gdp_data)
+
 
 
     covid_joined = pd.merge(raw_covid_data, pop_data, on="Country")
