@@ -38,7 +38,7 @@ def read_covid_data() -> pd.DataFrame:
 
     confirmed = pd.Series(confirmed_dict)
     death = pd.Series(death_dict)
-    covid_data = pd.DataFrame(list(zip(confirmed, death)), columns=["confirmed", "death"])
+    covid_data = pd.DataFrame(list(zip(confirmed, death)), columns=["Confirmed", "Death"])
     covid_data.insert(0, "Country", confirmed_dict.keys())
 
     return covid_data
@@ -71,6 +71,32 @@ def read_life_expectancy() -> pd.DataFrame:
 
     return life_df
 
+def read_population() -> pd.DataFrame:
+    """
+    read the population and modify some country names to the same as COVID-19 data
+    :return DataFrame of population data
+
+    """
+
+    pop_df = pd.read_csv("data/API_SP.POP.TOTL_DS2_en_csv_v2_988606.csv",
+                          header=2, usecols=[0,62], names=["Country", "Population"])
+
+    index = pop_df[pop_df["Country"]=="Iran, Islamic Rep."].index.values[0]
+    pop_df.loc[index, "Country"] = "Iran"
+    index = pop_df[pop_df["Country"] == "United States"].index.values[0]
+    pop_df.loc[index, "Country"] = "US"
+    index = pop_df[pop_df["Country"] == "Russian Federation"].index.values[0]
+    pop_df.loc[index, "Country"] = "Russia"
+
+    # life expectancy of Dominica is NaN.
+    # Since Dominica has same confirmed and death with Namibia, we assume they also have the same life expectancy
+    # domi_index = life_df[life_df["Country"] == "Dominica"].index.values[0]
+    # nami_index = life_df[life_df["Country"] == "Namibia"].index.values[0]
+    # life_df.loc[domi_index, "Life expectancy"] = life_df.loc[nami_index, "Life expectancy"]
+
+    pop_df = pop_df.dropna()
+
+    return pop_df
 
 def read_GDP() -> pd.DataFrame:
     """
@@ -100,8 +126,11 @@ def correlation_analysis():
 
     """
 
-    covid_data = read_covid_data()
+    raw_covid_data = read_covid_data()
     # print(covid_data)
+
+    pop_data = read_population()
+    # print(pop_data)
 
     life_expectancy_data = read_life_expectancy()
     # print(life_expectancy_data)
@@ -109,17 +138,31 @@ def correlation_analysis():
     gdp_data = read_GDP()
     # print(gdp_data)
 
-    covid_life_joined = pd.merge(covid_data, life_expectancy_data, on="Country")
+    covid_joined = pd.merge(raw_covid_data, pop_data, on="Country")
+    print(covid_joined)
+
+    # calculate confirmed rate and death rate and insert in dataframe
+    covid_joined.insert(4, "Confirmed rate", covid_joined["Confirmed"] / covid_joined["Population"])
+    covid_joined.insert(5, "Death rate", covid_joined["Death"] / covid_joined["Population"])
+    # print(covid_joined)
+
+    covid_life_joined = pd.merge(covid_joined, life_expectancy_data, on="Country")
     # print(covid_life_joined)
 
     covid_life_gdp_joined = pd.merge(covid_life_joined, gdp_data, on="Country")
     # print(covid_life_gdp_joined)
 
-    display_analysis_result(covid_life_gdp_joined["confirmed"], covid_life_gdp_joined["Life expectancy"], "confirmed", "life expectancy")
-    display_analysis_result(covid_life_gdp_joined["death"], covid_life_gdp_joined["Life expectancy"], "death", "life expectancy")
+    # display_analysis_result(covid_life_gdp_joined["Confirmed"], covid_life_gdp_joined["Life expectancy"], "confirmed", "life expectancy")
+    # display_analysis_result(covid_life_gdp_joined["Death"], covid_life_gdp_joined["Life expectancy"], "death", "life expectancy")
+    #
+    # display_analysis_result(covid_life_gdp_joined["Confirmed"], covid_life_gdp_joined["GDP"], "confirmed", "GDP")
+    # display_analysis_result(covid_life_gdp_joined["Death"], covid_life_gdp_joined["GDP"], "death", "GDP")
 
-    display_analysis_result(covid_life_gdp_joined["confirmed"], covid_life_gdp_joined["GDP"], "confirmed", "GDP")
-    display_analysis_result(covid_life_gdp_joined["death"], covid_life_gdp_joined["GDP"], "death", "GDP")
+    display_analysis_result(covid_life_gdp_joined["Confirmed rate"], covid_life_gdp_joined["Life expectancy"], "confirmed rate", "life expectancy")
+    display_analysis_result(covid_life_gdp_joined["Death rate"], covid_life_gdp_joined["Life expectancy"], "death rate", "life expectancy")
+
+    display_analysis_result(covid_life_gdp_joined["Confirmed rate"], covid_life_gdp_joined["GDP"], "confirmed rate", "GDP")
+    display_analysis_result(covid_life_gdp_joined["Death rate"], covid_life_gdp_joined["GDP"], "death rate", "GDP")
 
 
 def calculate_covariance(column1: pd.Series, column2: pd.Series) -> np.float64:
@@ -157,6 +200,18 @@ def calculate_correlation_coefficient(column1: pd.Series, column2: pd.Series) ->
 
 
 def calculate_significance_of_coefficient(column1: pd.Series, column2: pd.Series) -> np.float64:
+    """
+    calcualte the p-value of the significance test of the two dataframe columns
+    :param column1: one column of a dataframe
+    :param column2: one column of a dataframe
+    :return p-value of the significance test of the two input columns
+
+    >>> test_df = pd.DataFrame({"A":[1,2,3,4,10,34], "B": [5,6,7,9,38,78]})
+    >>> calculate_significance_of_coefficient(test_df.A, test_df.B)
+    0.0006257038151347064
+
+    """
+
     p_value = stats.pearsonr(column1,column2)[1]
     return p_value
 
