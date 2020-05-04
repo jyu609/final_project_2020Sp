@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 
 def read_confirmed() -> dict:
@@ -122,6 +122,9 @@ def correlation_analysis():
     print("Correlation coefficient: " + str(calculate_correlation_coefficient(covid_life_joined["death"],
                                                                               covid_life_joined["Life expectancy"])))
 
+    draw_scatter_plot(covid_life_joined["confirmed"].head(12), covid_life_joined["Life expectancy"].head(12), "confirmed", "Life expectancy")
+    draw_scatter_plot(covid_life_joined["death"].head(12), covid_life_joined["Life expectancy"].head(12), "death", "Life expectancy")
+
 
 def calculate_covariance(column1: pd.Series, column2: pd.Series) -> np.float64:
     """
@@ -156,6 +159,12 @@ def calculate_correlation_coefficient(column1: pd.Series, column2: pd.Series) ->
     corr = column1.corr(column2)
     return corr
 
+def draw_scatter_plot(x: pd.Series, y: pd.Series, x_label: str, y_label: str):
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.scatter(x, y)
+    # plt.legend()
+    plt.show()
 
 if __name__ == '__main__':
     correlation_analysis()
