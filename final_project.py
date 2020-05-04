@@ -277,6 +277,16 @@ def calculate_significance_of_coefficient(column1: pd.Series, column2: pd.Series
 
 
 def draw_scatter_plot(x: pd.Series, y: pd.Series, x_label: str, y_label: str):
+
+    """
+    Generate a scatter plot based on two given dataframe columns
+    :param column1: one column of a dataframe
+    :param column2: one column of a dataframe
+    :param x_label: name of label x
+    :param y_label: name of label y
+
+    """
+
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     plt.scatter(x, y)
@@ -285,6 +295,14 @@ def draw_scatter_plot(x: pd.Series, y: pd.Series, x_label: str, y_label: str):
 
 
 def display_analysis_result(column1: pd.Series, column2: pd.Series, name1: str, name2: str):
+    """
+    Display the analysis result based on two given dataframe columns
+    :param column1: one column of a dataframe
+    :param column2: one column of a dataframe
+    :param name1: name of label x
+    :param name2: name of label y
+
+    """
     print("Correlation between '%s' and '%s':" % (name1, name2))
     # covariance is positive, so they have positive relation
     print("Covariance: " + str(calculate_covariance(column1, column2)))
