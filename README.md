@@ -1,7 +1,7 @@
 # 590PR Final Project
 
-# GitHub ID: 
-tanyilin, PXBian, jyu609
+# Net ID: 
+yilint2, pengxin2, jyu69
 
 # Type of project: 
 (Type II Projects) Specifics for an Original Data Analysis [Non-simulation]
