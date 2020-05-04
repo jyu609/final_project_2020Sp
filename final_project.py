@@ -78,7 +78,7 @@ def read_GDP() -> pd.DataFrame:
     """
 
     gdp_df = pd.read_csv("data/API_NY.GDP.PCAP.CD_DS2_en_csv_v2_988471.csv",
-                          header=2, usecols=[0,62], names=["Country", "GDP"])
+                          header=4, usecols=[0,62], names=["Country", "GDP"])
 
     index = gdp_df[gdp_df["Country"]=="Iran, Islamic Rep."].index.values[0]
     gdp_df.loc[index, "Country"] = "Iran"
@@ -102,8 +102,14 @@ def correlation_analysis():
     life_expectancy_data = read_life_expectancy()
     # print(life_expectancy_data)
 
+    gdp_data = read_GDP()
+    # print(gdp_data)
+
     covid_life_joined = pd.merge(covid_data, life_expectancy_data, on="Country")
     # print(covid_life_joined)
+
+    covid_life_gdp_joined = pd.merge(covid_life_joined, gdp_data, on="Country")
+    # print(covid_life_gdp_joined)
 
     print("Correlation between 'confirmed' and 'life expectancy at birth':")
     # covariance is positive, so they have positive relation
@@ -111,13 +117,13 @@ def correlation_analysis():
     # correlation coefficient is between 0.4 and 0.8, they have moderately linear correlation
     print("Correlation coefficient: " + str(calculate_correlation_coefficient(covid_life_joined["confirmed"],covid_life_joined["Life expectancy"])))
     # p-value is less than 0.05, indicating a significant correlation
-    print("Significance of coefficient: " + str(calculate_significance_of_coefficient(covid_life_joined["confirmed"],covid_life_joined["Life expectancy"])))
+    #print("Significance of coefficient: " + str(calculate_significance_of_coefficient(covid_life_joined["confirmed"],covid_life_joined["Life expectancy"])))
 
     print()
     print("Correlation between 'death' and 'life expectancy at birth':")
     print("Covariance: " + str(calculate_covariance(covid_life_joined["death"], covid_life_joined["Life expectancy"])))
     print("Correlation coefficient: " + str(calculate_correlation_coefficient(covid_life_joined["death"], covid_life_joined["Life expectancy"])))
-    print("Significance of coefficient: " + str(calculate_significance_of_coefficient(covid_life_joined["death"], covid_life_joined["Life expectancy"])))
+    #print("Significance of coefficient: " + str(calculate_significance_of_coefficient(covid_life_joined["death"], covid_life_joined["Life expectancy"])))
 
     draw_scatter_plot(covid_life_joined["confirmed"].head(12), covid_life_joined["Life expectancy"].head(12), "confirmed", "Life expectancy")
     draw_scatter_plot(covid_life_joined["death"].head(12), covid_life_joined["Life expectancy"].head(12), "death", "Life expectancy")
