@@ -70,6 +70,32 @@ def read_life_expectancy() -> pd.DataFrame:
     return life_df
 
 
+def read_GDP() -> pd.DataFrame:
+    """
+    read the life expectancy at birth dataset and modify some country names to the same as COVID-19 data
+    :return DataFrame of life expectancy at birth data
+
+    """
+
+    life_df = pd.read_csv("data/API_SP.DYN.LE00.IN_DS2_en_csv_v2_988752.csv",
+                          header=2, usecols=[0,62], names=["Country", "Life expectancy"])
+
+    index = life_df[life_df["Country"]=="Iran, Islamic Rep."].index.values[0]
+    life_df.loc[index, "Country"] = "Iran"
+    index = life_df[life_df["Country"] == "United States"].index.values[0]
+    life_df.loc[index, "Country"] = "US"
+    index = life_df[life_df["Country"] == "Russian Federation"].index.values[0]
+    life_df.loc[index, "Country"] = "Russia"
+
+    # life expectancy of Dominica is NaN.
+    # Since Dominica has same confirmed and death with Namibia, we assume they also have the same life expectancy
+    domi_index = life_df[life_df["Country"] == "Dominica"].index.values[0]
+    nami_index = life_df[life_df["Country"] == "Namibia"].index.values[0]
+    life_df.loc[domi_index, "Life expectancy"] = life_df.loc[nami_index, "Life expectancy"]
+
+    return life_df
+
+
 def correlation_analysis():
     """
     main function of the correlation analysis
