@@ -4,54 +4,26 @@ import matplotlib.pyplot as plt
 import scipy.stats as stats
 
 
-def read_confirmed() -> dict:
+def read_covid_csv(path) -> dict:
     """
     Read the 'data/time_series_covid19_confirmed_global.csv' and extract data
     :return: the number of confirmed cases of the seleted countries
     """
 
-    confirmed_dict = {'US': 0, 'Spain': 0, 'Italy': 0, 'United Kingdom': 0, \
-                      'France': 0, 'Germany': 0, 'Turkey': 0, 'Russia': 0, 'Iran': 0, \
-                      'Brazil': 0, 'China': 0, 'Canada': 0, 'Fiji': 0, 'Belize': 0, \
-                      'Namibia': 0, 'Dominica': 0, 'Tajikistan': 0, 'Nicaragua': 0, \
-                      'Seychelles': 0, 'Burundi': 0, 'Suriname': 0, 'Mauritania': 0, \
-                      'Bhutan': 0, 'Comoros': 0}
-    with open("data/time_series_covid19_confirmed_global.csv") as f:
+    dict = {}
+    with open(path) as f:
         title = f.readline()
         line = f.readline()
         while (line):
             entities = line.split(',')
             country = entities[1]
             cur_num = int(entities[len(entities) - 1])
-            if country in confirmed_dict.keys():
-                confirmed_dict[country] += cur_num
+            if country in dict.keys():
+                dict[country] += cur_num
+            else:
+                dict[country] = cur_num
             line = f.readline()
-    return confirmed_dict
-
-
-def read_death() -> dict:
-    """
-    Read the 'data/time_series_covid19_deaths_global.csv' and extract data
-    :return: the number of death cases of the seleted countries
-    """
-
-    death_dict = {'US': 0, 'Spain': 0, 'Italy': 0, 'United Kingdom': 0, \
-                  'France': 0, 'Germany': 0, 'Turkey': 0, 'Russia': 0, 'Iran': 0, \
-                  'Brazil': 0, 'China': 0, 'Canada': 0, 'Fiji': 0, 'Belize': 0, \
-                  'Namibia': 0, 'Dominica': 0, 'Tajikistan': 0, 'Nicaragua': 0, \
-                  'Seychelles': 0, 'Burundi': 0, 'Suriname': 0, 'Mauritania': 0, \
-                  'Bhutan': 0, 'Comoros': 0}
-    with open("data/time_series_covid19_deaths_global.csv") as f:
-        title = f.readline()
-        line = f.readline()
-        while (line):
-            entities = line.split(',')
-            country = entities[1]
-            cur_num = int(entities[len(entities) - 1])
-            if country in death_dict.keys():
-                death_dict[country] += cur_num
-            line = f.readline()
-    return death_dict
+    return dict
 
 
 def read_covid_data() -> pd.DataFrame:
@@ -61,8 +33,8 @@ def read_covid_data() -> pd.DataFrame:
 
     """
 
-    confirmed_dict = read_confirmed()
-    death_dict = read_death()
+    confirmed_dict = read_covid_csv("data/time_series_covid19_confirmed_global.csv")
+    death_dict = read_covid_csv("data/time_series_covid19_deaths_global.csv")
 
     confirmed = pd.Series(confirmed_dict)
     death = pd.Series(death_dict)
