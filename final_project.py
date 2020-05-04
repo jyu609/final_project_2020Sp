@@ -120,6 +120,47 @@ def read_GDP() -> pd.DataFrame:
     return gdp_df
 
 
+def read_Education() -> pd.DataFrame:
+    """
+    read the Expected years of schooling (years).csv dataset and modify some country names to the same as COVID-19 data
+    :return DataFrame of GDP at birth data
+
+    """
+
+    school_df = pd.read_csv("data/Expected years of schooling (years).csv", header=2, usecols=[1, 32], names=["Country", "Education"])
+
+    index = school_df[school_df["Country"]=="Iran (Islamic Republic of)"].index.values[0]
+    school_df.loc[index, "Country"] = "Iran"
+    index = school_df[school_df["Country"] == "United States"].index.values[0]
+    school_df.loc[index, "Country"] = "US"
+    index = school_df[school_df["Country"] == "Russian Federation"].index.values[0]
+    school_df.loc[index, "Country"] = "Russia"
+
+    school_df = school_df.dropna()
+
+    return school_df
+
+
+def read_Internet() -> pd.DataFrame:
+    """
+    read the Internet users, total (% of population) dataset and modify some country names to the same as COVID-19 data
+    :return DataFrame of GDP at birth data
+
+    """
+
+    internet_df = pd.read_csv("data/Internet users, total (% of population).csv", header=2, usecols=[1, 20], names=["Country", "Internet"])
+
+    index = internet_df[internet_df["Country"]=="Iran (Islamic Republic of)"].index.values[0]
+    internet_df.loc[index, "Country"] = "Iran"
+    index = internet_df[internet_df["Country"] == "United States"].index.values[0]
+    internet_df.loc[index, "Country"] = "US"
+    index = internet_df[internet_df["Country"] == "Russian Federation"].index.values[0]
+    internet_df.loc[index, "Country"] = "Russia"
+
+    internet_df = internet_df.dropna()
+
+    return internet_df
+
 def correlation_analysis():
     """
     main function of the correlation analysis
@@ -138,6 +179,13 @@ def correlation_analysis():
     gdp_data = read_GDP()
     # print(gdp_data)
 
+    edu_data = read_Education()
+    # print(gdp_data)
+
+    int_data = read_Internet()
+    # print(gdp_data)
+
+
     covid_joined = pd.merge(raw_covid_data, pop_data, on="Country")
     print(covid_joined)
 
@@ -151,6 +199,16 @@ def correlation_analysis():
 
     covid_life_gdp_joined = pd.merge(covid_life_joined, gdp_data, on="Country")
     # print(covid_life_gdp_joined)
+    covid_life_gdp_edu_joined = pd.merge(covid_life_gdp_joined, edu_data, on="Country")
+
+    covid_life_gdp_edu_int_joined = pd.merge(covid_life_gdp_edu_joined, int_data, on="Country")
+    covid_life_gdp_edu_int_joined = covid_life_gdp_edu_int_joined[covid_life_gdp_edu_int_joined.Education != '..']
+    covid_life_gdp_edu_int_joined = covid_life_gdp_edu_int_joined[covid_life_gdp_edu_int_joined.Internet != '..']
+    covid_life_gdp_edu_int_joined['Education'] = covid_life_gdp_edu_int_joined['Education'].astype(float)
+    covid_life_gdp_edu_int_joined['Internet'] = covid_life_gdp_edu_int_joined['Internet'].astype(float)
+    #print(covid_life_gdp_edu_int_joined)
+    #print(covid_life_gdp_edu_int_joined.dtypes)
+
 
     # display_analysis_result(covid_life_gdp_joined["Confirmed"], covid_life_gdp_joined["Life expectancy"], "confirmed", "life expectancy")
     # display_analysis_result(covid_life_gdp_joined["Death"], covid_life_gdp_joined["Life expectancy"], "death", "life expectancy")
@@ -164,6 +222,13 @@ def correlation_analysis():
     display_analysis_result(covid_life_gdp_joined["Confirmed rate"], covid_life_gdp_joined["GDP"], "confirmed rate", "GDP")
     display_analysis_result(covid_life_gdp_joined["Death rate"], covid_life_gdp_joined["GDP"], "death rate", "GDP")
 
+
+    display_analysis_result(covid_life_gdp_edu_int_joined["Confirmed rate"], covid_life_gdp_edu_int_joined["Education"], "confirmed rate", "Education")
+    display_analysis_result(covid_life_gdp_edu_int_joined["Death rate"], covid_life_gdp_edu_int_joined["Education"], "death rate", "Education")
+
+
+    display_analysis_result(covid_life_gdp_edu_int_joined["Confirmed rate"], covid_life_gdp_edu_int_joined["Internet"], "confirmed rate", "Internet")
+    display_analysis_result(covid_life_gdp_edu_int_joined["Death rate"], covid_life_gdp_edu_int_joined["Internet"], "death rate", "Internet")
 
 def calculate_covariance(column1: pd.Series, column2: pd.Series) -> np.float64:
     """
@@ -238,4 +303,5 @@ def display_analysis_result(column1: pd.Series, column2: pd.Series, name1: str, 
 
 
 if __name__ == '__main__':
+
     correlation_analysis()
