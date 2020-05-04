@@ -63,9 +63,11 @@ def read_life_expectancy() -> pd.DataFrame:
 
     # life expectancy of Dominica is NaN.
     # Since Dominica has same confirmed and death with Namibia, we assume they also have the same life expectancy
-    domi_index = life_df[life_df["Country"] == "Dominica"].index.values[0]
-    nami_index = life_df[life_df["Country"] == "Namibia"].index.values[0]
-    life_df.loc[domi_index, "Life expectancy"] = life_df.loc[nami_index, "Life expectancy"]
+    # domi_index = life_df[life_df["Country"] == "Dominica"].index.values[0]
+    # nami_index = life_df[life_df["Country"] == "Namibia"].index.values[0]
+    # life_df.loc[domi_index, "Life expectancy"] = life_df.loc[nami_index, "Life expectancy"]
+
+    life_df = life_df.dropna()
 
     return life_df
 
@@ -86,6 +88,8 @@ def read_GDP() -> pd.DataFrame:
     gdp_df.loc[index, "Country"] = "US"
     index = gdp_df[gdp_df["Country"] == "Russian Federation"].index.values[0]
     gdp_df.loc[index, "Country"] = "Russia"
+
+    gdp_df = gdp_df.dropna()
 
     return gdp_df
 
@@ -111,22 +115,11 @@ def correlation_analysis():
     covid_life_gdp_joined = pd.merge(covid_life_joined, gdp_data, on="Country")
     # print(covid_life_gdp_joined)
 
-    print("Correlation between 'confirmed' and 'life expectancy at birth':")
-    # covariance is positive, so they have positive relation
-    print("Covariance: " + str(calculate_covariance(covid_life_joined["confirmed"], covid_life_joined["Life expectancy"])))
-    # correlation coefficient is between 0.4 and 0.8, they have moderately linear correlation
-    print("Correlation coefficient: " + str(calculate_correlation_coefficient(covid_life_joined["confirmed"],covid_life_joined["Life expectancy"])))
-    # p-value is less than 0.05, indicating a significant correlation
-    #print("Significance of coefficient: " + str(calculate_significance_of_coefficient(covid_life_joined["confirmed"],covid_life_joined["Life expectancy"])))
+    display_analysis_result(covid_life_gdp_joined["confirmed"], covid_life_gdp_joined["Life expectancy"], "confirmed", "life expectancy")
+    display_analysis_result(covid_life_gdp_joined["death"], covid_life_gdp_joined["Life expectancy"], "death", "life expectancy")
 
-    print()
-    print("Correlation between 'death' and 'life expectancy at birth':")
-    print("Covariance: " + str(calculate_covariance(covid_life_joined["death"], covid_life_joined["Life expectancy"])))
-    print("Correlation coefficient: " + str(calculate_correlation_coefficient(covid_life_joined["death"], covid_life_joined["Life expectancy"])))
-    #print("Significance of coefficient: " + str(calculate_significance_of_coefficient(covid_life_joined["death"], covid_life_joined["Life expectancy"])))
-
-    draw_scatter_plot(covid_life_joined["confirmed"].head(12), covid_life_joined["Life expectancy"].head(12), "confirmed", "Life expectancy")
-    draw_scatter_plot(covid_life_joined["death"].head(12), covid_life_joined["Life expectancy"].head(12), "death", "Life expectancy")
+    display_analysis_result(covid_life_gdp_joined["confirmed"], covid_life_gdp_joined["GDP"], "confirmed", "GDP")
+    display_analysis_result(covid_life_gdp_joined["death"], covid_life_gdp_joined["GDP"], "death", "GDP")
 
 
 def calculate_covariance(column1: pd.Series, column2: pd.Series) -> np.float64:
@@ -174,6 +167,20 @@ def draw_scatter_plot(x: pd.Series, y: pd.Series, x_label: str, y_label: str):
     plt.scatter(x, y)
     # plt.legend()
     plt.show()
+
+
+def display_analysis_result(column1: pd.Series, column2: pd.Series, name1: str, name2: str):
+    print("Correlation between '%s' and '%s':" % (name1, name2))
+    # covariance is positive, so they have positive relation
+    print("Covariance: " + str(calculate_covariance(column1, column2)))
+    # correlation coefficient is between 0.4 and 0.8, they have moderately linear correlation
+    print("Correlation coefficient: " + str(calculate_correlation_coefficient(column1, column2)))
+    # p-value is less than 0.05, indicating a significant correlation
+    print("Significance of coefficient: " + str(calculate_significance_of_coefficient(column1, column2)))
+    print()
+
+    draw_scatter_plot(column1, column2, name1, name2)
+
 
 if __name__ == '__main__':
     correlation_analysis()
