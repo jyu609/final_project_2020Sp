@@ -1,12 +1,12 @@
 # 590PR Final Project
 
-# Net ID: 
+## Net ID: 
 yilint2, pengxin2, jyu69
 
-# Type of project: 
+## Type of project: 
 (Type II Projects) Specifics for an Original Data Analysis [Non-simulation]
 
-# Title: 
+## Title: 
 Analysis of the relationship between the extent of COVID-19 and the developed level of countries
 
 ## Description: 
