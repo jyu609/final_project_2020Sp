@@ -10,7 +10,7 @@ yilint2, pengxin2, jyu69
 Analysis of the relationship between the extent of COVID-19 and the developed level of countries
 
 # Description: 
-Our goal is to find out the relationship between the extent of COVID-19 and the developed level of countries. We use two factors to indicate the extent of COVID-19, the confirmed rate, and death rate. And we use factors in four aspects to reflect the developed level, economy (GDP per capita), education (excepted year of schooling), lifespans (life expectancy at birth) and mobility and communication (Internet user percentage of a country).
+Our goal is to find out the relationship between the extent of COVID-19 and the developed level of countries. We use two factors to indicate the extent of COVID-19, the confirmed rate, and death rate. And we use factors in four aspects to reflect the developed level, economy (GDP per capita), education (excepted year of schooling), lifespans (life expectancy at birth), mobility and communication (Internet user percentage of a country).
 
 # Hypothesis:
 
