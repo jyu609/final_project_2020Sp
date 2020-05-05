@@ -182,7 +182,7 @@ def correlation_analysis():
 
 
     covid_joined = pd.merge(raw_covid_data, pop_data, on="Country")
-    print(covid_joined)
+    # print(covid_joined)
 
     # calculate confirmed rate and death rate and insert in dataframe
     covid_joined.insert(4, "Confirmed rate", covid_joined["Confirmed"] / covid_joined["Population"])
@@ -197,6 +197,10 @@ def correlation_analysis():
     covid_life_gdp_edu_joined = pd.merge(covid_life_gdp_joined, edu_data, on="Country")
 
     covid_life_gdp_edu_int_joined = pd.merge(covid_life_gdp_edu_joined, int_data, on="Country")
+    # for i in range(len(covid_life_gdp_edu_int_joined)):
+    #     #     row = covid_life_gdp_edu_int_joined.iloc[i].values  # 返回一个list
+    #     #     print(row)
+
     covid_life_gdp_edu_int_joined = covid_life_gdp_edu_int_joined[covid_life_gdp_edu_int_joined.Education != '..']
     covid_life_gdp_edu_int_joined = covid_life_gdp_edu_int_joined[covid_life_gdp_edu_int_joined.Internet != '..']
     covid_life_gdp_edu_int_joined['Education'] = covid_life_gdp_edu_int_joined['Education'].astype(float)
@@ -211,11 +215,11 @@ def correlation_analysis():
     # display_analysis_result(covid_life_gdp_joined["Confirmed"], covid_life_gdp_joined["GDP"], "confirmed", "GDP")
     # display_analysis_result(covid_life_gdp_joined["Death"], covid_life_gdp_joined["GDP"], "death", "GDP")
 
-    display_analysis_result(covid_life_gdp_joined["Confirmed rate"], covid_life_gdp_joined["Life expectancy"], "confirmed rate", "life expectancy")
-    display_analysis_result(covid_life_gdp_joined["Death rate"], covid_life_gdp_joined["Life expectancy"], "death rate", "life expectancy")
+    display_analysis_result(covid_life_gdp_edu_int_joined["Confirmed rate"], covid_life_gdp_edu_int_joined["Life expectancy"], "confirmed rate", "life expectancy")
+    display_analysis_result(covid_life_gdp_edu_int_joined["Death rate"], covid_life_gdp_edu_int_joined["Life expectancy"], "death rate", "life expectancy")
 
-    display_analysis_result(covid_life_gdp_joined["Confirmed rate"], covid_life_gdp_joined["GDP"], "confirmed rate", "GDP")
-    display_analysis_result(covid_life_gdp_joined["Death rate"], covid_life_gdp_joined["GDP"], "death rate", "GDP")
+    display_analysis_result(covid_life_gdp_edu_int_joined["Confirmed rate"], covid_life_gdp_edu_int_joined["GDP"], "confirmed rate", "GDP")
+    display_analysis_result(covid_life_gdp_edu_int_joined["Death rate"], covid_life_gdp_edu_int_joined["GDP"], "death rate", "GDP")
 
 
     display_analysis_result(covid_life_gdp_edu_int_joined["Confirmed rate"], covid_life_gdp_edu_int_joined["Education"], "confirmed rate", "Education")
