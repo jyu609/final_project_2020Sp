@@ -61,12 +61,6 @@ def read_life_expectancy() -> pd.DataFrame:
     index = life_df[life_df["Country"] == "Russian Federation"].index.values[0]
     life_df.loc[index, "Country"] = "Russia"
 
-    # life expectancy of Dominica is NaN.
-    # Since Dominica has same confirmed and death with Namibia, we assume they also have the same life expectancy
-    # domi_index = life_df[life_df["Country"] == "Dominica"].index.values[0]
-    # nami_index = life_df[life_df["Country"] == "Namibia"].index.values[0]
-    # life_df.loc[domi_index, "Life expectancy"] = life_df.loc[nami_index, "Life expectancy"]
-
     life_df = life_df.dropna()
 
     return life_df
@@ -87,12 +81,6 @@ def read_population() -> pd.DataFrame:
     pop_df.loc[index, "Country"] = "US"
     index = pop_df[pop_df["Country"] == "Russian Federation"].index.values[0]
     pop_df.loc[index, "Country"] = "Russia"
-
-    # life expectancy of Dominica is NaN.
-    # Since Dominica has same confirmed and death with Namibia, we assume they also have the same life expectancy
-    # domi_index = life_df[life_df["Country"] == "Dominica"].index.values[0]
-    # nami_index = life_df[life_df["Country"] == "Namibia"].index.values[0]
-    # life_df.loc[domi_index, "Life expectancy"] = life_df.loc[nami_index, "Life expectancy"]
 
     pop_df = pop_df.dropna()
 
@@ -208,26 +196,18 @@ def correlation_analysis():
     #print(covid_life_gdp_edu_int_joined)
     #print(covid_life_gdp_edu_int_joined.dtypes)
 
+    display_analysis_result(covid_life_gdp_edu_int_joined["Life expectancy"], covid_life_gdp_edu_int_joined["Confirmed rate"], "life expectancy", "confirmed rate")
+    display_analysis_result(covid_life_gdp_edu_int_joined["Life expectancy"], covid_life_gdp_edu_int_joined["Death rate"], "life expectancy", "death rate")
 
-    # display_analysis_result(covid_life_gdp_joined["Confirmed"], covid_life_gdp_joined["Life expectancy"], "confirmed", "life expectancy")
-    # display_analysis_result(covid_life_gdp_joined["Death"], covid_life_gdp_joined["Life expectancy"], "death", "life expectancy")
-    #
-    # display_analysis_result(covid_life_gdp_joined["Confirmed"], covid_life_gdp_joined["GDP"], "confirmed", "GDP")
-    # display_analysis_result(covid_life_gdp_joined["Death"], covid_life_gdp_joined["GDP"], "death", "GDP")
+    display_analysis_result(covid_life_gdp_edu_int_joined["GDP"], covid_life_gdp_edu_int_joined["Confirmed rate"], "GDP", "confirmed rate")
+    display_analysis_result(covid_life_gdp_edu_int_joined["GDP"], covid_life_gdp_edu_int_joined["Death rate"], "GDP", "death rate")
 
-    display_analysis_result(covid_life_gdp_edu_int_joined["Confirmed rate"], covid_life_gdp_edu_int_joined["Life expectancy"], "confirmed rate", "life expectancy")
-    display_analysis_result(covid_life_gdp_edu_int_joined["Death rate"], covid_life_gdp_edu_int_joined["Life expectancy"], "death rate", "life expectancy")
+    display_analysis_result(covid_life_gdp_edu_int_joined["Education"], covid_life_gdp_edu_int_joined["Confirmed rate"], "Education", "confirmed rate")
+    display_analysis_result(covid_life_gdp_edu_int_joined["Education"], covid_life_gdp_edu_int_joined["Death rate"], "Education",  "death rate")
 
-    display_analysis_result(covid_life_gdp_edu_int_joined["Confirmed rate"], covid_life_gdp_edu_int_joined["GDP"], "confirmed rate", "GDP")
-    display_analysis_result(covid_life_gdp_edu_int_joined["Death rate"], covid_life_gdp_edu_int_joined["GDP"], "death rate", "GDP")
+    display_analysis_result(covid_life_gdp_edu_int_joined["Internet"], covid_life_gdp_edu_int_joined["Confirmed rate"], "Internet", "confirmed rate")
+    display_analysis_result(covid_life_gdp_edu_int_joined["Internet"], covid_life_gdp_edu_int_joined["Death rate"], "Internet", "death rate")
 
-
-    display_analysis_result(covid_life_gdp_edu_int_joined["Confirmed rate"], covid_life_gdp_edu_int_joined["Education"], "confirmed rate", "Education")
-    display_analysis_result(covid_life_gdp_edu_int_joined["Death rate"], covid_life_gdp_edu_int_joined["Education"], "death rate", "Education")
-
-
-    display_analysis_result(covid_life_gdp_edu_int_joined["Confirmed rate"], covid_life_gdp_edu_int_joined["Internet"], "confirmed rate", "Internet")
-    display_analysis_result(covid_life_gdp_edu_int_joined["Death rate"], covid_life_gdp_edu_int_joined["Internet"], "death rate", "Internet")
 
 def calculate_covariance(column1: pd.Series, column2: pd.Series) -> np.float64:
     """
@@ -308,11 +288,8 @@ def display_analysis_result(column1: pd.Series, column2: pd.Series, name1: str, 
 
     """
     print("Correlation between '%s' and '%s':" % (name1, name2))
-    # covariance is positive, so they have positive relation
     print("Covariance: " + str(calculate_covariance(column1, column2)))
-    # correlation coefficient is between 0.4 and 0.8, they have moderately linear correlation
     print("Correlation coefficient: " + str(calculate_correlation_coefficient(column1, column2)))
-    # p-value is less than 0.05, indicating a significant correlation
     print("Significance of coefficient: " + str(calculate_significance_of_coefficient(column1, column2)))
     print()
 
