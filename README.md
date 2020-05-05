@@ -25,7 +25,11 @@ Our goal is to find out the relationship between the extent of COVID-19 and the 
 
 
 ## Conclusion:
-
+* All our four hypothesis are supported. 
+* That means that countries  with higher developed level tend to  have more serious extend of COVID-19 
+* We think this may because: 
+  * Testing problems in less developed countries.  
+  * Low connectivity in less developed countries
 
 
 ## Data Source:
