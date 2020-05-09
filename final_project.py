@@ -2,11 +2,14 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats as stats
+from sklearn.linear_model import LinearRegression
+import seaborn as sns
 
 
 def read_covid_csv(path) -> dict:
     """
     Read the 'data/time_series_covid19_confirmed_global.csv' and extract data
+    :param path: the path of the covid19 csv file
     :return: the number of confirmed cases of the seleted countries
     """
 
@@ -65,6 +68,7 @@ def read_life_expectancy() -> pd.DataFrame:
 
     return life_df
 
+
 def read_population() -> pd.DataFrame:
     """
     read the population and modify some country names to the same as COVID-19 data
@@ -86,7 +90,8 @@ def read_population() -> pd.DataFrame:
 
     return pop_df
 
-def read_GDP() -> pd.DataFrame:
+
+def read_gdp() -> pd.DataFrame:
     """
     read the GDP at birth dataset and modify some country names to the same as COVID-19 data
     :return DataFrame of GDP at birth data
@@ -108,7 +113,7 @@ def read_GDP() -> pd.DataFrame:
     return gdp_df
 
 
-def read_Education() -> pd.DataFrame:
+def read_education() -> pd.DataFrame:
     """
     read the Expected years of schooling (years).csv dataset and modify some country names to the same as COVID-19 data
     :return DataFrame of expected years of schooling
@@ -129,7 +134,7 @@ def read_Education() -> pd.DataFrame:
     return school_df
 
 
-def read_Internet() -> pd.DataFrame:
+def read_internet() -> pd.DataFrame:
     """
     read the Internet users, total (% of population) dataset and modify some country names to the same as COVID-19 data
     :return DataFrame of the internet users percentage
@@ -161,52 +166,42 @@ def correlation_analysis():
 
     life_expectancy_data = read_life_expectancy()
 
-    gdp_data = read_GDP()
+    gdp_data = read_gdp()
 
-    edu_data = read_Education()
+    edu_data = read_education()
 
-    int_data = read_Internet()
-
-
+    int_data = read_internet()
 
     covid_joined = pd.merge(raw_covid_data, pop_data, on="Country")
-    # print(covid_joined)
 
-    # calculate confirmed rate and death rate and insert in dataframe
     covid_joined.insert(4, "Confirmed rate", covid_joined["Confirmed"] / covid_joined["Population"])
     covid_joined.insert(5, "Death rate", covid_joined["Death"] / covid_joined["Population"])
-    # print(covid_joined)
 
     covid_life_joined = pd.merge(covid_joined, life_expectancy_data, on="Country")
-    # print(covid_life_joined)
-
     covid_life_gdp_joined = pd.merge(covid_life_joined, gdp_data, on="Country")
-    # print(covid_life_gdp_joined)
     covid_life_gdp_edu_joined = pd.merge(covid_life_gdp_joined, edu_data, on="Country")
-
     covid_life_gdp_edu_int_joined = pd.merge(covid_life_gdp_edu_joined, int_data, on="Country")
-    # for i in range(len(covid_life_gdp_edu_int_joined)):
-    #     #     row = covid_life_gdp_edu_int_joined.iloc[i].values  # 返回一个list
-    #     #     print(row)
-
     covid_life_gdp_edu_int_joined = covid_life_gdp_edu_int_joined[covid_life_gdp_edu_int_joined.Education != '..']
     covid_life_gdp_edu_int_joined = covid_life_gdp_edu_int_joined[covid_life_gdp_edu_int_joined.Internet != '..']
     covid_life_gdp_edu_int_joined['Education'] = covid_life_gdp_edu_int_joined['Education'].astype(float)
     covid_life_gdp_edu_int_joined['Internet'] = covid_life_gdp_edu_int_joined['Internet'].astype(float)
-    #print(covid_life_gdp_edu_int_joined)
-    #print(covid_life_gdp_edu_int_joined.dtypes)
 
-    display_analysis_result(covid_life_gdp_edu_int_joined["Life expectancy"], covid_life_gdp_edu_int_joined["Confirmed rate"], "life expectancy", "confirmed rate")
-    display_analysis_result(covid_life_gdp_edu_int_joined["Life expectancy"], covid_life_gdp_edu_int_joined["Death rate"], "life expectancy", "death rate")
+    sns.set()
 
-    display_analysis_result(covid_life_gdp_edu_int_joined["GDP"], covid_life_gdp_edu_int_joined["Confirmed rate"], "GDP", "confirmed rate")
-    display_analysis_result(covid_life_gdp_edu_int_joined["GDP"], covid_life_gdp_edu_int_joined["Death rate"], "GDP", "death rate")
+    draw_histogram(covid_life_gdp_edu_int_joined["Confirmed rate"], "COVID-19 Confirmed rate")
+    draw_histogram(covid_life_gdp_edu_int_joined["Death rate"], "COVID-19 Death rate")
 
-    display_analysis_result(covid_life_gdp_edu_int_joined["Education"], covid_life_gdp_edu_int_joined["Confirmed rate"], "Education", "confirmed rate")
-    display_analysis_result(covid_life_gdp_edu_int_joined["Education"], covid_life_gdp_edu_int_joined["Death rate"], "Education",  "death rate")
+    display_analysis_result(covid_life_gdp_edu_int_joined["Life expectancy"], covid_life_gdp_edu_int_joined["Confirmed rate"], "Life expectancy", "Confirmed rate")
+    display_analysis_result(covid_life_gdp_edu_int_joined["Life expectancy"], covid_life_gdp_edu_int_joined["Death rate"], "Life expectancy", "Death rate")
 
-    display_analysis_result(covid_life_gdp_edu_int_joined["Internet"], covid_life_gdp_edu_int_joined["Confirmed rate"], "Internet", "confirmed rate")
-    display_analysis_result(covid_life_gdp_edu_int_joined["Internet"], covid_life_gdp_edu_int_joined["Death rate"], "Internet", "death rate")
+    display_analysis_result(covid_life_gdp_edu_int_joined["GDP"], covid_life_gdp_edu_int_joined["Confirmed rate"], "GDP", "Confirmed rate")
+    display_analysis_result(covid_life_gdp_edu_int_joined["GDP"], covid_life_gdp_edu_int_joined["Death rate"], "GDP", "Death rate")
+
+    display_analysis_result(covid_life_gdp_edu_int_joined["Education"], covid_life_gdp_edu_int_joined["Confirmed rate"], "Education", "Confirmed rate")
+    display_analysis_result(covid_life_gdp_edu_int_joined["Education"], covid_life_gdp_edu_int_joined["Death rate"], "Education",  "Death rate")
+
+    display_analysis_result(covid_life_gdp_edu_int_joined["Internet"], covid_life_gdp_edu_int_joined["Confirmed rate"], "Internet", "Confirmed rate")
+    display_analysis_result(covid_life_gdp_edu_int_joined["Internet"], covid_life_gdp_edu_int_joined["Death rate"], "Internet", "Death rate")
 
 
 def calculate_covariance(column1: pd.Series, column2: pd.Series) -> np.float64:
@@ -260,21 +255,52 @@ def calculate_significance_of_coefficient(column1: pd.Series, column2: pd.Series
     return p_value
 
 
-def draw_scatter_plot(x: pd.Series, y: pd.Series, x_label: str, y_label: str):
+def draw_histogram(x: pd.Series, x_label: str):
+    """
+    Generate a histogram for the input variable
+    :param x: one column of a dataframe
+    :param x_label: name of x
 
     """
-    Generate a scatter plot based on two given dataframe columns
-    :param column1: one column of a dataframe
-    :param column2: one column of a dataframe
-    :param x_label: name of label x
-    :param y_label: name of label y
+
+    x.plot.hist(grid=True, bins=20, rwidth=0.9, color='#607c8e')
+    plt.title('Histogram for %s' % x_label)
+    plt.show()
+
+
+def draw_scatter_plot(x: pd.Series, y: pd.Series, x_label: str, y_label: str):
+    """
+    Generate a scatter plot based on two given dataframe columns, and draw its linear regression line
+    :param x: one column of a dataframe
+    :param y: one column of a dataframe
+    :param x_label: name of x
+    :param y_label: name of y
 
     """
 
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     plt.scatter(x, y)
-    # plt.legend()
+    plt.title("Scatter plot of '%s' and '%s'" % (x_label, y_label))
+
+    lr_model = linear_regression(x, y)
+    plt.plot(x, lr_model.predict(np.array(x).reshape(-1, 1)), color='red')
+
+    plt.show()
+
+
+def draw_residual_plot(x: pd.Series, y: pd.Series, x_label: str, y_label: str):
+    """
+    Generate a residual plot based on two given dataframe columns
+    :param x: one column of a dataframe
+    :param y: one column of a dataframe
+    :param x_label: name of x
+    :param y_label: name of y
+
+    """
+
+    plt.title("Residual plot of '%s' and '%s'" % (x_label, y_label))
+    sns.residplot(x=x, y=y, scatter_kws={"s": 80})
     plt.show()
 
 
@@ -283,10 +309,11 @@ def display_analysis_result(column1: pd.Series, column2: pd.Series, name1: str, 
     Display the analysis result based on two given dataframe columns
     :param column1: one column of a dataframe
     :param column2: one column of a dataframe
-    :param name1: name of label x
-    :param name2: name of label y
+    :param name1: name of x
+    :param name2: name of y
 
     """
+
     print("Correlation between '%s' and '%s':" % (name1, name2))
     print("Covariance: " + str(calculate_covariance(column1, column2)))
     print("Correlation coefficient: " + str(calculate_correlation_coefficient(column1, column2)))
@@ -294,6 +321,22 @@ def display_analysis_result(column1: pd.Series, column2: pd.Series, name1: str, 
     print()
 
     draw_scatter_plot(column1, column2, name1, name2)
+    draw_residual_plot(column1, column2, name1, name2)
+
+
+def linear_regression(x: pd.Series, y: pd.Series) -> LinearRegression:
+    """
+    Create the linear regression model using the two input variables
+    :param column1: one column of a dataframe
+    :param column2: one column of a dataframe
+    :return linear regression model
+
+    """
+
+    lr_model = LinearRegression(copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)
+    lr_model.fit(np.array(x).reshape(-1,1), y)
+
+    return lr_model
 
 
 if __name__ == '__main__':
