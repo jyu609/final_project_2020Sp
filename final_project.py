@@ -11,6 +11,12 @@ def read_covid_csv(path) -> dict:
     Read the 'data/time_series_covid19_confirmed_global.csv' and extract data
     :param path: the path of the covid19 csv file
     :return: the number of confirmed cases of the seleted countries
+
+    >>> read_covid_csv("data/time_series_covid19_confirmed_global.csv") # doctest: +ELLIPSIS
+    {'Afghanistan': 2335, 'Albania': 782, 'Algeria': 4154, ..., 'Yemen': 7, 'Comoros': 1, 'Tajikistan': 15}
+    >>> read_covid_csv("data/time_series_covid19_deaths_global.csv") # doctest: +ELLIPSIS
+    {'Afghanistan': 68, 'Albania': 31, 'Algeria': 453, ..., 'Yemen': 2, 'Comoros': 0, 'Tajikistan': 0}
+
     """
 
     dict = {}
@@ -34,6 +40,22 @@ def read_covid_data() -> pd.DataFrame:
     read the COVID-19 confirmed and death dataset, and return the combined dataset
     :return DataFrame of COVID-19 confirmed and death data
 
+    >>> read_covid_data() # doctest: +ELLIPSIS
+                       Country  Confirmed  Death
+    0              Afghanistan       2335     68
+    1                  Albania        782     31
+    2                  Algeria       4154    453
+    3                  Andorra        745     43
+    4                   Angola         30      2
+    ..                     ...        ...    ...
+    183         Western Sahara          6      0
+    184  Sao Tome and Principe         16      1
+    185                  Yemen          7      2
+    186                Comoros          1      0
+    187             Tajikistan         15      0
+    <BLANKLINE>
+    [188 rows x 3 columns]
+
     """
 
     confirmed_dict = read_covid_csv("data/time_series_covid19_confirmed_global.csv")
@@ -52,6 +74,21 @@ def read_life_expectancy() -> pd.DataFrame:
     read the life expectancy at birth dataset and modify some country names to the same as COVID-19 data
     :return DataFrame of life expectancy at birth data
 
+    >>> read_life_expectancy() # doctest: +ELLIPSIS
+                      Country  Life expectancy
+    0                   Aruba        76.152000
+    1             Afghanistan        64.486000
+    2                  Angola        60.782000
+    3                 Albania        78.458000
+    6    United Arab Emirates        77.814000
+    ..                    ...              ...
+    259                Kosovo        72.195122
+    260           Yemen, Rep.        66.096000
+    261          South Africa        63.857000
+    262                Zambia        63.510000
+    263              Zimbabwe        61.195000
+    <BLANKLINE>
+    [200 rows x 2 columns]
     """
 
     life_df = pd.read_csv("data/API_SP.DYN.LE00.IN_DS2_en_csv_v2_988752.csv",
@@ -74,6 +111,21 @@ def read_population() -> pd.DataFrame:
     read the population and modify some country names to the same as COVID-19 data
     :return DataFrame of population data
 
+    >>> read_population() # doctest: +ELLIPSIS
+              Country  Population
+    0           Aruba    105845.0
+    1     Afghanistan  37172386.0
+    2          Angola  30809762.0
+    3         Albania   2866376.0
+    4         Andorra     77006.0
+    ..            ...         ...
+    259        Kosovo   1845300.0
+    260   Yemen, Rep.  28498687.0
+    261  South Africa  57779622.0
+    262        Zambia  17351822.0
+    263      Zimbabwe  14439018.0
+    <BLANKLINE>
+    [262 rows x 2 columns]
     """
 
     pop_df = pd.read_csv("data/API_SP.POP.TOTL_DS2_en_csv_v2_988606.csv",
@@ -96,6 +148,24 @@ def read_gdp() -> pd.DataFrame:
     read the GDP at birth dataset and modify some country names to the same as COVID-19 data
     :return DataFrame of GDP at birth data
 
+    read the GDP at birth dataset and modify some country names to the same as COVID-19 data
+    :return DataFrame of GDP at birth data
+
+    >>> read_gdp() # doctest: +ELLIPSIS
+              Country           GDP
+    1     Afghanistan    520.896603
+    2          Angola   3432.385736
+    3         Albania   5268.848504
+    4         Andorra  42029.762740
+    5      Arab World   6608.806978
+    ..            ...           ...
+    259        Kosovo   4302.276483
+    260         Yemen    944.408499
+    261  South Africa   6374.028196
+    262        Zambia   1539.900158
+    263      Zimbabwe   2146.996385
+    <BLANKLINE>
+    [239 rows x 2 columns]
     """
 
     gdp_df = pd.read_csv("data/API_NY.GDP.PCAP.CD_DS2_en_csv_v2_988471.csv",
@@ -118,6 +188,24 @@ def read_education() -> pd.DataFrame:
     read the Expected years of schooling (years).csv dataset and modify some country names to the same as COVID-19 data
     :return DataFrame of expected years of schooling
 
+    read the Expected years of schooling (years).csv dataset and modify some country names to the same as COVID-19 data
+    :return DataFrame of expected years of schooling
+
+    >>> read_education() # doctest: +ELLIPSIS
+                                                   Country Education
+    0                                              Albania      11.5
+    1                                              Algeria      12.3
+    2                                              Andorra      10.8
+    3                                               Angola       7.2
+    4                                  Antigua and Barbuda      13.3
+    ..                                                 ...       ...
+    204                                 Sub-Saharan Africa       8.4
+    205                          Least Developed Countries       7.9
+    206                     Small Island Developing States      11.2
+    207  Organization for Economic Co-operation and Dev...      15.1
+    208                                              World      11.0
+    <BLANKLINE>
+    [209 rows x 2 columns]
     """
 
     school_df = pd.read_csv("data/Expected years of schooling (years).csv", header=2, usecols=[1, 32], names=["Country", "Education"])
@@ -139,6 +227,24 @@ def read_internet() -> pd.DataFrame:
     read the Internet users, total (% of population) dataset and modify some country names to the same as COVID-19 data
     :return DataFrame of the internet users percentage
 
+    read the Internet users, total (% of population) dataset and modify some country names to the same as COVID-19 data
+    :return DataFrame of the internet users percentage
+
+    >>> read_internet() # doctest: +ELLIPSIS
+                                                   Country Internet
+    0                                              Albania     71.8
+    1                                              Algeria     47.7
+    2                                              Andorra     91.6
+    3                                               Angola     14.3
+    4                                  Antigua and Barbuda     76.0
+    ..                                                 ...      ...
+    206                                 Sub-Saharan Africa       ..
+    207                          Least Developed Countries       ..
+    208                     Small Island Developing States       ..
+    209  Organization for Economic Co-operation and Dev...       ..
+    210                                              World       ..
+    <BLANKLINE>
+    [211 rows x 2 columns]
     """
 
     internet_df = pd.read_csv("data/Internet users, total (% of population).csv", header=2, usecols=[1, 20], names=["Country", "Internet"])
@@ -158,6 +264,47 @@ def correlation_analysis():
     """
     main function of the correlation analysis
 
+    >>> correlation_analysis() # doctest: +ELLIPSIS
+    Correlation between 'Life expectancy' and 'Confirmed rate':
+    Covariance: 0.004864970899942478
+    Correlation coefficient: 0.5459437655980632
+    Significance of coefficient: 1.4742898384814164e-12
+    <BLANKLINE>
+    Correlation between 'Life expectancy' and 'Death rate':
+    Covariance: 0.0002986633685732408
+    Correlation coefficient: 0.3953634031081128
+    Significance of coefficient: 9.374436170796122e-07
+    <BLANKLINE>
+    Correlation between 'GDP' and 'Confirmed rate':
+    Covariance: 20.709503384631503
+    Correlation coefficient: 0.8196478076933055
+    Significance of coefficient: 3.578204253962846e-36
+    <BLANKLINE>
+    Correlation between 'GDP' and 'Death rate':
+    Covariance: 1.0419636332702333
+    Correlation coefficient: 0.48647105125142487
+    Significance of coefficient: 6.337973140459767e-10
+    <BLANKLINE>
+    Correlation between 'Education' and 'Confirmed rate':
+    Covariance: 0.0018544790352640428
+    Correlation coefficient: 0.4806920693379
+    Significance of coefficient: 1.0760008334598738e-09
+    <BLANKLINE>
+    Correlation between 'Education' and 'Death rate':
+    Covariance: 0.00013383214808335018
+    Correlation coefficient: 0.4092157313144012
+    Significance of coefficient: 3.5321629653305334e-07
+    <BLANKLINE>
+    Correlation between 'Internet' and 'Confirmed rate':
+    Covariance: 0.018802516144276568
+    Correlation coefficient: 0.5741299215380059
+    Significance of coefficient: 5.353578151550454e-14
+    <BLANKLINE>
+    Correlation between 'Internet' and 'Death rate':
+    Covariance: 0.0009862721820709528
+    Correlation coefficient: 0.3552530687131522
+    Significance of coefficient: 1.24662072295369e-05
+    <BLANKLINE>
     """
 
     raw_covid_data = read_covid_data()
@@ -312,6 +459,13 @@ def display_analysis_result(column1: pd.Series, column2: pd.Series, name1: str, 
     :param name1: name of x
     :param name2: name of y
 
+    >>> test_df = pd.DataFrame({"A":[1,2,3,4,10,34], "B": [5,6,7,9,38,78]})
+    >>> display_analysis_result(test_df['A'], test_df['B'], 'A', 'B')
+    Correlation between 'A' and 'B':
+    Covariance: 363.80000000000007
+    Correlation coefficient: 0.9795059746517649
+    Significance of coefficient: 0.0006257038151347131
+    <BLANKLINE>
     """
 
     print("Correlation between '%s' and '%s':" % (name1, name2))
