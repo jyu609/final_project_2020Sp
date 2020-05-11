@@ -280,45 +280,26 @@ def correlation_analysis():
 
     >>> correlation_analysis() # doctest: +ELLIPSIS
     Correlation between 'Life expectancy' and 'Confirmed rate':
-    Covariance: 0.004427542775590538
-    Correlation coefficient: 0.5049132766045039
-    Significance of coefficient: 1.0941782171909835e-10
+    Covariance: 0.0044...
+    Correlation coefficient: 0.50...
+    Significance of coefficient: 1.094...e-10
     <BLANKLINE>
     Correlation between 'Life expectancy' and 'Death rate':
-    Covariance: 0.00024390032882397756
-    Correlation coefficient: 0.35606681998968714
-    Significance of coefficient: 1.186853870094044e-05
-    <BLANKLINE>
-    Correlation between 'GDP' and 'Confirmed rate':
-    Covariance: 19.354157243066645
-    Correlation coefficient: 0.7784275946362611
-    Significance of coefficient: 1.6445808791153403e-30
-    <BLANKLINE>
-    Correlation between 'GDP' and 'Death rate':
-    Covariance: 0.877190366700734
-    Correlation coefficient: 0.4516509277248211
-    Significance of coefficient: 1.3317671903563231e-08
-    <BLANKLINE>
-    Correlation between 'Education' and 'Confirmed rate':
-    Covariance: 0.0016673870676250494
-    Correlation coefficient: 0.4392055490700786
-    Significance of coefficient: 3.650268920410474e-08
-    <BLANKLINE>
-    Correlation between 'Education' and 'Death rate':
-    Covariance: 0.00011093467329782557
-    Correlation coefficient: 0.37407940070632045
-    Significance of coefficient: 3.8625237919287906e-06
-    <BLANKLINE>
+    Covariance: 0.00024...
+    Correlation coefficient: 0.35...
+    Significance of coefficient: 1.18...e-05
+    ...
     Correlation between 'Internet' and 'Confirmed rate':
-    Covariance: 0.017205396019696156
-    Correlation coefficient: 0.5338819586684661
-    Significance of coefficient: 5.555948418423457e-12
+    Covariance: 0.017...
+    Correlation coefficient: 0.53...
+    Significance of coefficient: 5.55...e-12
     <BLANKLINE>
     Correlation between 'Internet' and 'Death rate':
-    Covariance: 0.0007862526841708948
-    Correlation coefficient: 0.31232576194685485
-    Significance of coefficient: 0.00013838814696463372
+    Covariance: 0.00078...
+    Correlation coefficient: 0.31...
+    Significance of coefficient: 0.00013...
     <BLANKLINE>
+
     """
 
     raw_covid_data = read_covid_data()
@@ -407,8 +388,8 @@ def calculate_significance_of_coefficient(column1: pd.Series, column2: pd.Series
     :return p-value of the significance test of the two input columns
 
     >>> test_df = pd.DataFrame({"A":[1,2,3,4,10,34], "B": [5,6,7,9,38,78]})
-    >>> calculate_significance_of_coefficient(test_df.A, test_df.B)
-    0.0006257038151347131
+    >>> calculate_significance_of_coefficient(test_df.A, test_df.B) # doctest: +ELLIPSIS
+    0.0006257...
 
     """
 
@@ -474,11 +455,11 @@ def display_analysis_result(column1: pd.Series, column2: pd.Series, name1: str, 
     :param name2: name of y
 
     >>> test_df = pd.DataFrame({"A":[1,2,3,4,10,34], "B": [5,6,7,9,38,78]})
-    >>> display_analysis_result(test_df['A'], test_df['B'], 'A', 'B')
+    >>> display_analysis_result(test_df['A'], test_df['B'], 'A', 'B') # doctest: +ELLIPSIS
     Correlation between 'A' and 'B':
-    Covariance: 363.8
-    Correlation coefficient: 0.9795059746517647
-    Significance of coefficient: 0.0006257038151347131
+    Covariance: 363.8...
+    Correlation coefficient: 0.97...
+    Significance of coefficient: 0.00062...
     <BLANKLINE>
     """
 
