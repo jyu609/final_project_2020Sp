@@ -23,7 +23,9 @@ Our goal is to find out the relationship between the extent of COVID-19 and the 
 4.The Internet user percentage of a country has positive linear relationship with COVID-19 confirmed rate and death rate
 ## Analysis:
 ![](corrlation.png)
-![](plots.png)
+![](hist.png)
+![](residual.png)
+![](scatter.png)
 ## Conclusion:
 * All our four hypothesis are supported. 
 * That means that countries  with higher developed level tend to  have more serious extend of COVID-19 
