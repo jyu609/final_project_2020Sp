@@ -4,35 +4,31 @@ import matplotlib.pyplot as plt
 import scipy.stats as stats
 from sklearn.linear_model import LinearRegression
 import seaborn as sns
+from multiprocessing import Pool
 
 
-def read_covid_csv(path) -> dict:
-    """
-    Read the 'data/time_series_covid19_confirmed_global.csv' and extract data
-    :param path: the path of the covid19 csv file
-    :return: the number of confirmed cases of the seleted countries
-
-    >>> read_covid_csv("data/time_series_covid19_confirmed_global.csv") # doctest: +ELLIPSIS
-    {'Afghanistan': 2335, 'Albania': 782, 'Algeria': 4154, ..., 'Yemen': 7, 'Comoros': 1, 'Tajikistan': 15}
-    >>> read_covid_csv("data/time_series_covid19_deaths_global.csv") # doctest: +ELLIPSIS
-    {'Afghanistan': 68, 'Albania': 31, 'Algeria': 453, ..., 'Yemen': 2, 'Comoros': 0, 'Tajikistan': 0}
+def process(line) -> dict:
 
     """
+    process line data from input file
+    :param line: each line from the covid19 csv file
+    :return: dict of final result
 
+    >>> process(",B,33.0,65.0,0,0,0,0")
+    {'B': 0}
+
+    """
     dict = {}
-    with open(path) as f:
-        title = f.readline()
-        line = f.readline()
-        while (line):
-            entities = line.split(',')
-            country = entities[1]
-            cur_num = int(entities[len(entities) - 1])
-            if country in dict.keys():
-                dict[country] += cur_num
-            else:
-                dict[country] = cur_num
-            line = f.readline()
+    entities = line.split(',')
+    country = entities[1]
+    cur_num = int(entities[len(entities) - 1])
+    if country in dict.keys():
+        dict[country] += cur_num
+    else:
+        dict[country] = cur_num
     return dict
+
+
 
 
 def read_covid_data() -> pd.DataFrame:
@@ -58,8 +54,26 @@ def read_covid_data() -> pd.DataFrame:
 
     """
 
-    confirmed_dict = read_covid_csv("data/time_series_covid19_confirmed_global.csv")
-    death_dict = read_covid_csv("data/time_series_covid19_deaths_global.csv")
+    #confirmed_dict = read_covid_csv("data/time_series_covid19_confirmed_global.csv")
+    #death_dict = read_covid_csv("data/time_series_covid19_deaths_global.csv")
+
+    pool = Pool(12)
+    with open("data/time_series_covid19_confirmed_global.csv") as source_file:
+        title = source_file.readline() #get rid of the header
+        #print(source_file.readline())
+        confirmed_lst = pool.map(process, source_file, 4) #parallel processing the data
+
+    with open("data/time_series_covid19_deaths_global.csv") as source_file:
+        title = source_file.readline()
+        death_lst = pool.map(process, source_file, 4)
+
+    confirmed_dict = {}
+    for d in confirmed_lst:
+        confirmed_dict.update(d)
+
+    death_dict = {}
+    for d in death_lst:
+        death_dict.update(d)
 
     confirmed = pd.Series(confirmed_dict)
     death = pd.Series(death_dict)
@@ -266,44 +280,44 @@ def correlation_analysis():
 
     >>> correlation_analysis() # doctest: +ELLIPSIS
     Correlation between 'Life expectancy' and 'Confirmed rate':
-    Covariance: 0.004864970899942478
-    Correlation coefficient: 0.5459437655980632
-    Significance of coefficient: 1.4742898384814164e-12
+    Covariance: 0.004427542775590538
+    Correlation coefficient: 0.5049132766045039
+    Significance of coefficient: 1.0941782171909835e-10
     <BLANKLINE>
     Correlation between 'Life expectancy' and 'Death rate':
-    Covariance: 0.0002986633685732408
-    Correlation coefficient: 0.3953634031081128
-    Significance of coefficient: 9.374436170796122e-07
+    Covariance: 0.00024390032882397756
+    Correlation coefficient: 0.35606681998968714
+    Significance of coefficient: 1.186853870094044e-05
     <BLANKLINE>
     Correlation between 'GDP' and 'Confirmed rate':
-    Covariance: 20.709503384631503
-    Correlation coefficient: 0.8196478076933055
-    Significance of coefficient: 3.578204253962846e-36
+    Covariance: 19.354157243066645
+    Correlation coefficient: 0.7784275946362611
+    Significance of coefficient: 1.6445808791153403e-30
     <BLANKLINE>
     Correlation between 'GDP' and 'Death rate':
-    Covariance: 1.0419636332702333
-    Correlation coefficient: 0.48647105125142487
-    Significance of coefficient: 6.337973140459767e-10
+    Covariance: 0.877190366700734
+    Correlation coefficient: 0.4516509277248211
+    Significance of coefficient: 1.3317671903563231e-08
     <BLANKLINE>
     Correlation between 'Education' and 'Confirmed rate':
-    Covariance: 0.0018544790352640428
-    Correlation coefficient: 0.4806920693379
-    Significance of coefficient: 1.0760008334598738e-09
+    Covariance: 0.0016673870676250494
+    Correlation coefficient: 0.4392055490700786
+    Significance of coefficient: 3.650268920410474e-08
     <BLANKLINE>
     Correlation between 'Education' and 'Death rate':
-    Covariance: 0.00013383214808335018
-    Correlation coefficient: 0.4092157313144012
-    Significance of coefficient: 3.5321629653305334e-07
+    Covariance: 0.00011093467329782557
+    Correlation coefficient: 0.37407940070632045
+    Significance of coefficient: 3.8625237919287906e-06
     <BLANKLINE>
     Correlation between 'Internet' and 'Confirmed rate':
-    Covariance: 0.018802516144276568
-    Correlation coefficient: 0.5741299215380059
-    Significance of coefficient: 5.353578151550454e-14
+    Covariance: 0.017205396019696156
+    Correlation coefficient: 0.5338819586684661
+    Significance of coefficient: 5.555948418423457e-12
     <BLANKLINE>
     Correlation between 'Internet' and 'Death rate':
-    Covariance: 0.0009862721820709528
-    Correlation coefficient: 0.3552530687131522
-    Significance of coefficient: 1.24662072295369e-05
+    Covariance: 0.0007862526841708948
+    Correlation coefficient: 0.31232576194685485
+    Significance of coefficient: 0.00013838814696463372
     <BLANKLINE>
     """
 
@@ -394,7 +408,7 @@ def calculate_significance_of_coefficient(column1: pd.Series, column2: pd.Series
 
     >>> test_df = pd.DataFrame({"A":[1,2,3,4,10,34], "B": [5,6,7,9,38,78]})
     >>> calculate_significance_of_coefficient(test_df.A, test_df.B)
-    0.0006257038151347064
+    0.0006257038151347131
 
     """
 
@@ -462,8 +476,8 @@ def display_analysis_result(column1: pd.Series, column2: pd.Series, name1: str, 
     >>> test_df = pd.DataFrame({"A":[1,2,3,4,10,34], "B": [5,6,7,9,38,78]})
     >>> display_analysis_result(test_df['A'], test_df['B'], 'A', 'B')
     Correlation between 'A' and 'B':
-    Covariance: 363.80000000000007
-    Correlation coefficient: 0.9795059746517649
+    Covariance: 363.8
+    Correlation coefficient: 0.9795059746517647
     Significance of coefficient: 0.0006257038151347131
     <BLANKLINE>
     """
@@ -494,5 +508,4 @@ def linear_regression(x: pd.Series, y: pd.Series) -> LinearRegression:
 
 
 if __name__ == '__main__':
-
     correlation_analysis()
