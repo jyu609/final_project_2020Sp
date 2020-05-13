@@ -1,7 +1,9 @@
 # 590PR Final Project
 
-## Net ID: 
-yilint2, pengxin2, jyu69
+## Group Member (NetID) and responsible part: 
+Yilin Tan (yilint2), responsible for data processing of Life expectancy, drawing plots and making analysis
+Pengxin Bian (pengxin2), responsible for data processing of GDP and writing dostests
+Jingtao Yu (jyu69), responsible for data processing of Education and Internet, implement parallel programming and writing README and presentation slides
 
 ## Type of project: 
 (Type II Projects) Specifics for an Original Data Analysis [Non-simulation]
